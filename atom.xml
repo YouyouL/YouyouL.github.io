@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.burenyou.com/"/>
-  <updated>2017-11-30T03:36:31.737Z</updated>
+  <updated>2017-12-01T01:47:24.992Z</updated>
   <id>http://www.burenyou.com/</id>
   
   <author>
@@ -17,11 +17,37 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>git的上传操作与错误处理</title>
+    <link href="http://www.burenyou.com/2017/12/01/git%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E4%B8%8E%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86/"/>
+    <id>http://www.burenyou.com/2017/12/01/git的基本操作与错误处理/</id>
+    <published>2017-12-01T01:11:08.000Z</published>
+    <updated>2017-12-01T01:47:24.992Z</updated>
+    
+    <content type="html"><![CDATA[<p>在开启上传操作之时，请确定你已经安装了git。<br>注意这里的第一次和第二次都是在同一台电脑上的操作</p><h3 id="git的第一次上传操作流程"><a href="#git的第一次上传操作流程" class="headerlink" title="git的第一次上传操作流程"></a>git的第一次上传操作流程</h3><ol><li>右键在根目录，点击打开git bash</li><li>git init (git初始化)</li><li>git add . (它会监控工作区的状态树，使用它会把工作时的所有变化提交到暂存区，包括文件内容修改(modified)以及新文件(new)，但不包括被删除的文件。注意：千万不要漏了后面的.哦)</li><li>git commit -m “注释语句” (注释语句，为了方便下次查阅代码知道自己修改的地方或者主题，所以建议可以写详细一点)</li><li>git remote add origin <a href="https://自己仓库的URL地址" target="_blank" rel="noopener">https://自己仓库的URL地址</a> (推送地址)</li><li>git pull -u origin master:master(推送前，先拉取远程仓库的代码)</li><li>git push -u origin master:master(推送本地的代码到远程仓库)</li></ol><h3 id="git的第二次上传操作流程"><a href="#git的第二次上传操作流程" class="headerlink" title="git的第二次上传操作流程"></a>git的第二次上传操作流程</h3><ol><li>右键在根目录，点击打开git bash</li><li>git pull -u origin master:master(提交代码前，先进行更新操作)</li><li>git status (修改提示)</li><li>git commit -a (表示新增修改文件到缓存列表中，自动进入vim中，并且写入commit的修改内容)<br>可能用的按键有：<br>切换到命令行模式，即按k(上)、j(下)、h(左)、i(右)<br>gg移动到文件头，G移动到文件尾(一般光标是要移动到文件尾的)<br>切换到编辑模式，i编辑commit修改内容输入内容<br>切换到命令行模式，Esc<br>:wq，保存刚刚操作的内容并且退出</li><li>git push -u origin master:master(推送本地代码到远程仓库)</li></ol><h3 id="git远程拉取项目到本地"><a href="#git远程拉取项目到本地" class="headerlink" title="git远程拉取项目到本地"></a>git远程拉取项目到本地</h3><ol><li>右键在根目录，点击打开git bash</li><li>克隆 git clone <a href="http://XXX.XXX/sq-group/XXX.git" target="_blank" rel="noopener">http://XXX.XXX/sq-group/XXX.git</a></li></ol><h3 id="上传的时候遇到的问题及解决方法"><a href="#上传的时候遇到的问题及解决方法" class="headerlink" title="上传的时候遇到的问题及解决方法"></a>上传的时候遇到的问题及解决方法</h3><ol><li><p>refusing to merge unrelated histories<br>原因：本地的代码以前写的，而git库是现造的，所以两个仓库出现不同<br>办法：git pull origin master - -allow-unrelated-histories，再进行一次上传操作</p></li><li><p>unable to create ……文件所在… file exists<br>办法：在.git同级目录，执行rm -f .git/index.lock （或者rm -f git/index.lock） 删除后可提交，，再进行一次上传操作</p></li><li><p>$ git push -u origin master<br>To git@github.com:<strong>**</strong>/Demo.git<br>! [rejected] master -&gt; master (non-fast-forward)<br>error: failed to push some refs to ‘git@github.com:<strong>**</strong>/Demo.git’<br>hint: Updates were rejected because the tip of your current branch is behind<br>hint: its remote counterpart. Merge the remote changes (e.g. ‘git pull’)<br>hint: before pushing again.<br>hint: See the ‘Note about fast-forwards’ in ‘git push –help’ for details.<br>原因：网上搜索了下，是因为远程repository和我本地的repository冲突导致的，而我在创建版本库后，在github的版本库页面点击了创建README.md文件的按钮创建了说明文档，但是却没有pull到本地。这样就产生了版本冲突的问题。<br>解决方法：</p></li><li>使用强制push的方法：<br>$ git push -u origin master -f<br>这样会使远程修改丢失，一般是不可取的，尤其是多人协作开发的时候。</li><li>push前先将远程repository修改pull下来<br>$ git pull origin master<br>$ git push -u origin master</li><li><p>若不想merge远程和本地修改，可以先创建新的分支：<br>$ git branch [name]<br>然后push<br>$ git push -u origin [name]</p></li><li><p>fatal: Authentication failed for ‘<a href="https://github.com/" target="_blank" rel="noopener">https://github.com/</a> …<br>解决：</p><ol><li>git config -–global user.name “xxx”   </li><li>git config –-global user.email “xxx@xxx.com”<br>之后再进行一次上传操作  </li></ol></li><li><p>fatal: remote origin already exists.<br>解决：$ git remote rm origin，再进行一次上传操作</p></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;在开启上传操作之时，请确定你已经安装了git。&lt;br&gt;注意这里的第一次和第二次都是在同一台电脑上的操作&lt;/p&gt;
+&lt;h3 id=&quot;git的第一次上传操作流程&quot;&gt;&lt;a href=&quot;#git的第一次上传操作流程&quot; class=&quot;headerlink&quot; title=&quot;git的第一次
+      
+    
+    </summary>
+    
+      <category term="git" scheme="http://www.burenyou.com/categories/git/"/>
+    
+    
+      <category term="git" scheme="http://www.burenyou.com/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Http协议</title>
     <link href="http://www.burenyou.com/2017/11/29/Http%E5%8D%8F%E8%AE%AE/"/>
     <id>http://www.burenyou.com/2017/11/29/Http协议/</id>
     <published>2017-11-29T07:17:28.000Z</published>
-    <updated>2017-11-30T03:36:31.737Z</updated>
+    <updated>2017-12-01T01:11:57.731Z</updated>
     
     <content type="html"><![CDATA[<h3 id="什么是HTTP协议"><a href="#什么是HTTP协议" class="headerlink" title="什么是HTTP协议"></a>什么是HTTP协议</h3><p>协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从web服务器传送到客服端的浏览器。</p><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ol><li>它是一个超文本传输协议</li><li>基于TCP/IP通信协议来传递数据</li><li>一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系统</li><li>HTTP协议工作于客户端——服务端的架构上</li></ol><h3 id="URI与URL、URN"><a href="#URI与URL、URN" class="headerlink" title="URI与URL、URN"></a>URI与URL、URN</h3><p><strong>URI(uniform resource identifier)</strong><br>统一资源标识符，又叫定位符。提供了一个简单、可扩展的资源标识方式。包括了URL和URN<br><strong>URL(uniform resource locator)</strong><br>统一资源定位器，URL是URI的一种，不仅标识了Web 资源，还指定了操作或者获取方式，同时指出了主要访问机制和网络位置。<br>普通URL的各部分组成：<br>网址基本格式：<br>    schema://host[:port#]/path/…/[?query-string][#anchor]<br>解析：</p><ol><li>schema 指定网页使用的协议(HTTP,HTTPS,FTP,file等)</li><li>// 分隔符</li><li>host 域名或者服务器的IP地址</li><li>port 端口，http的服务器的默认端口是80，默认端口的情况下端口号是可以省略的。但是如果使用了其他的端口是必须要指明的，例如8080。</li><li>path 访问资源的路径，是个虚拟的目录，非URL的必须部分。</li><li>query-string 发送给服务器的数据，参数部分。又称搜索部分、查询部分。它允许有多个参数，参数与参数之间用‘&amp;’作为分隔符。</li><li>anchor 锚部分，一般是从‘#’开始到最后，非URL的必须部分。</li></ol><p><strong>URN(uniform resource name)</strong><br>统一资源命名，通过名字标识资源。URN是URI的一种，用特定命名空间的名字标识资源。使用URN可以在不知道其网络位置及访问方式的情况下讨论资源。</p>]]></content>
     

@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> git的上传操作与错误处理 · burenyou</title><meta name="description" content="git的上传操作与错误处理 - burenyou"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="search" type="application/opensearchdescription+xml" href="http://www.burenyou.com/atom.xml" title="burenyou"></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">burenyou</h2></a></div><a href="/" target="_self" class="li component-nav-item"><p>INDEX</p></a><a href="/archives" target="_self" class="li component-nav-item"><p>ARCHIVES</p></a><ul class="shortcut-icons"><a href="https://github.com/burenyou" target="_blank"><img src="/images/github.svg" class="icon"></a><a href="/atom.xml" target="_blank"><img src="/images/rss.svg" class="icon"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post"><article class="post-block"><h1 class="post-title">git的上传操作与错误处理</h1><div class="post-info">2017年12月1日</div><div class="post-content"><p>在开启上传操作之时，请确定你已经安装了git。<br>注意这里的第一次和第二次都是在同一台电脑上的操作</p>
+<h3 id="git的第一次上传操作流程"><a href="#git的第一次上传操作流程" class="headerlink" title="git的第一次上传操作流程"></a>git的第一次上传操作流程</h3><ol>
+<li>右键在根目录，点击打开git bash</li>
+<li>git init (git初始化)</li>
+<li>git add . (它会监控工作区的状态树，使用它会把工作时的所有变化提交到暂存区，包括文件内容修改(modified)以及新文件(new)，但不包括被删除的文件。注意：千万不要漏了后面的.哦)</li>
+<li>git commit -m “注释语句” (注释语句，为了方便下次查阅代码知道自己修改的地方或者主题，所以建议可以写详细一点)</li>
+<li>git remote add origin <a href="https://自己仓库的URL地址" target="_blank" rel="noopener">https://自己仓库的URL地址</a> (推送地址)</li>
+<li>git pull -u origin master:master(推送前，先拉取远程仓库的代码)</li>
+<li>git push -u origin master:master(推送本地的代码到远程仓库)</li>
+</ol>
+<h3 id="git的第二次上传操作流程"><a href="#git的第二次上传操作流程" class="headerlink" title="git的第二次上传操作流程"></a>git的第二次上传操作流程</h3><ol>
+<li>右键在根目录，点击打开git bash</li>
+<li>git pull -u origin master:master(提交代码前，先进行更新操作)</li>
+<li>git status (修改提示)</li>
+<li>git commit -a (表示新增修改文件到缓存列表中，自动进入vim中，并且写入commit的修改内容)<br>可能用的按键有：<br>切换到命令行模式，即按k(上)、j(下)、h(左)、i(右)<br>gg移动到文件头，G移动到文件尾(一般光标是要移动到文件尾的)<br>切换到编辑模式，i编辑commit修改内容输入内容<br>切换到命令行模式，Esc<br>:wq，保存刚刚操作的内容并且退出</li>
+<li>git push -u origin master:master(推送本地代码到远程仓库)</li>
+</ol>
+<h3 id="git远程拉取项目到本地"><a href="#git远程拉取项目到本地" class="headerlink" title="git远程拉取项目到本地"></a>git远程拉取项目到本地</h3><ol>
+<li>右键在根目录，点击打开git bash</li>
+<li>克隆 git clone <a href="http://XXX.XXX/sq-group/XXX.git" target="_blank" rel="noopener">http://XXX.XXX/sq-group/XXX.git</a></li>
+</ol>
+<h3 id="上传的时候遇到的问题及解决方法"><a href="#上传的时候遇到的问题及解决方法" class="headerlink" title="上传的时候遇到的问题及解决方法"></a>上传的时候遇到的问题及解决方法</h3><ol>
+<li><p>refusing to merge unrelated histories<br>原因：本地的代码以前写的，而git库是现造的，所以两个仓库出现不同<br>办法：git pull origin master - -allow-unrelated-histories，再进行一次上传操作</p>
+</li>
+<li><p>unable to create ……文件所在… file exists<br>办法：在.git同级目录，执行rm -f .git/index.lock （或者rm -f git/index.lock） 删除后可提交，，再进行一次上传操作</p>
+</li>
+<li><p>$ git push -u origin master<br>To git@github.com:<strong>**</strong>/Demo.git<br>! [rejected] master -&gt; master (non-fast-forward)<br>error: failed to push some refs to ‘git@github.com:<strong>**</strong>/Demo.git’<br>hint: Updates were rejected because the tip of your current branch is behind<br>hint: its remote counterpart. Merge the remote changes (e.g. ‘git pull’)<br>hint: before pushing again.<br>hint: See the ‘Note about fast-forwards’ in ‘git push –help’ for details.<br>原因：网上搜索了下，是因为远程repository和我本地的repository冲突导致的，而我在创建版本库后，在github的版本库页面点击了创建README.md文件的按钮创建了说明文档，但是却没有pull到本地。这样就产生了版本冲突的问题。<br>解决方法：</p>
+</li>
+<li>使用强制push的方法：<br>$ git push -u origin master -f<br>这样会使远程修改丢失，一般是不可取的，尤其是多人协作开发的时候。</li>
+<li>push前先将远程repository修改pull下来<br>$ git pull origin master<br>$ git push -u origin master</li>
+<li><p>若不想merge远程和本地修改，可以先创建新的分支：<br>$ git branch [name]<br>然后push<br>$ git push -u origin [name]</p>
+</li>
+<li><p>fatal: Authentication failed for ‘<a href="https://github.com/" target="_blank" rel="noopener">https://github.com/</a> …<br>解决：</p>
+<ol>
+<li>git config -–global user.name “xxx”   </li>
+<li>git config –-global user.email “xxx@xxx.com”<br>之后再进行一次上传操作  </li>
+</ol>
+</li>
+<li><p>fatal: remote origin already exists.<br>解决：$ git remote rm origin，再进行一次上传操作</p>
+</li>
+</ol>
+</div></article></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'burenyou';
+var disqus_identifier = '2017/12/01/git的基本操作与错误处理/';
+var disqus_title = 'git的上传操作与错误处理';
+var disqus_url = 'http://www.burenyou.com/2017/12/01/git的基本操作与错误处理/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//burenyou.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a href="/2017/11/29/Http协议/" class="next">NEXT</a></div><div class="copyright"><p>粤ICP备17144399 © 2017 <a href="http://www.burenyou.com">burenyou</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"burenyou",'auto');ga('send','pageview');</script></body></html>
